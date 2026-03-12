@@ -1,0 +1,16 @@
+tenho um instituto de educação e tecnologia que se chama VI3, que representa a geração de valor, usando nossa inteligencia, a inteligencia do aluno e IA. quero fazer uma imagem animada para colocar no meu site, de uma piramide, em que cada ponta seja a representação de uma inteligencia e o centro o valor agregado. nosso site tem fundo navy blue com fontes brancas. queria ideias de imagens para deixar a piramide girando dentro do site.
+
+O Gemini disse
+Para o seu instituto VI3, criei uma pirâmide holográfica que flutua num cenário de rede neural, conectando visualmente as três inteligências ao núcleo do valor gerado. Esta imagem foi otimizada para o design do seu site, mantendo o fundo azul-marinho e as fontes brancas para uma integração perfeita.
+
+Ideias para a animação da pirâmide no site:
+
+Rotação Contínua e Suave: A pirâmide pode girar lentamente em torno do eixo central. Isso destaca cada "face" da inteligência à medida que o "Valor Agregado" permanece estável e brilhante no centro, sugerindo estabilidade e constância no resultado.
+
+Pulsos de Luz Sequenciais: As arestas que conectam os vértices (cada inteligência) ao núcleo podem pulsar com luz em sequência. Primeiro a "Inteligência VI3", depois a "Inteligência do Aluno", e por fim a "IA". Esse ciclo de luz alimentando o centro ilustra o processo colaborativo e a geração dinâmica de valor.
+
+Aparecimento Progressivo de Elementos: Ao carregar a página, as bases da pirâmide e seus ícones (cérebro, lâmpada) podem surgir primeiro como hologramas tênues, seguidos pelas linhas de conexão, culminando no acendimento do núcleo de "Valor Agregado". Isso cria uma "história" visual rápida sobre a união dos recursos.
+
+Interação com o Mouse (Hover): A pirâmide pode ter uma animação sutil "idle" (parada) e, quando o usuário passa o mouse por cima, ela gira mais rápido ou os textos das inteligências brilham mais intensamente, incentivando a exploração dos conceitos.
+
+Núcleo como "Buraco de Minhoca" ou Foco de Atração: O centro pode ter uma animação de "sucção" ou contração sutil de luz, indicando que todas as inteligências estão sendo "puxadas" para criar o valor, reforçando a ideia de fusão e síntese energética.

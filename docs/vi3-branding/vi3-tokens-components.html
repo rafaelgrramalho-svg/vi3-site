@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VI3 — Tokens & Componentes: Guia de Personalização</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0A1628;
+    --navy-mid: #0D1F3C;
+    --navy-light: #122544;
+    --cyan: #1E9FD4;
+    --cyan-bright: #2EC4F0;
+    --white: #F0F4FF;
+    --white-dim: rgba(240,244,255,0.65);
+    --white-faint: rgba(240,244,255,0.1);
+    --line: rgba(30,159,212,0.18);
+    --green: #22C55E;
+    --amber: #F59E0B;
+    --red: #EF4444;
+    --purple: #A855F7;
+  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight:300;
+    line-height:1.6;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--navy-mid);
+    border-bottom: 1px solid var(--line);
+    padding: 1rem 3rem;
+    display:flex; align-items:center; justify-content:space-between;
+    position:sticky; top:0; z-index:100;
+  }
+  .topbar-logo {
+    font-family:'DM Serif Display', serif;
+    font-size:1.1rem;
+  }
+  .topbar-logo span { color:var(--cyan); }
+  .topbar-subtitle {
+    font-family:'Space Mono',monospace;
+    font-size:.65rem; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--cyan);
+  }
+  .topbar-badge {
+    font-family:'Space Mono',monospace;
+    font-size:.6rem; letter-spacing:.1em;
+    border:1px solid var(--amber);
+    color:var(--amber);
+    padding:.3rem .7rem;
+  }
+
+  /* ── LAYOUT ── */
+  .layout {
+    display:grid; grid-template-columns: 280px 1fr;
+    min-height: calc(100vh - 57px);
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    background: var(--navy-mid);
+    border-right: 1px solid var(--line);
+    padding: 2rem 0;
+    position:sticky; top:57px; height:calc(100vh - 57px);
+    overflow-y:auto;
+  }
+  .sidebar-section {
+    margin-bottom: 2rem;
+  }
+  .sidebar-section-title {
+    font-family:'Space Mono',monospace;
+    font-size:.6rem; letter-spacing:.14em; text-transform:uppercase;
+    color: var(--white-dim);
+    padding: 0 1.5rem;
+    margin-bottom:.5rem;
+  }
+  .sidebar a {
+    display:block;
+    padding: .5rem 1.5rem;
+    color:var(--white-dim);
+    text-decoration:none;
+    font-size:.875rem;
+    transition:color .15s, background .15s;
+    border-left: 2px solid transparent;
+  }
+  .sidebar a:hover, .sidebar a.active {
+    color: var(--cyan-bright);
+    background: rgba(30,159,212,.06);
+    border-left-color: var(--cyan);
+  }
+
+  /* ── MAIN ── */
+  .main {
+    padding: 3rem;
+    max-width: 900px;
+  }
+
+  /* ── SECTION BLOCKS ── */
+  .doc-section {
+    margin-bottom: 4rem;
+    scroll-margin-top: 80px;
+  }
+
+  .doc-section-header {
+    display:flex; align-items:center; gap:1rem;
+    margin-bottom:2rem;
+    padding-bottom:1rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .section-num {
+    font-family:'Space Mono',monospace;
+    font-size:.65rem; letter-spacing:.12em;
+    color:var(--cyan); 
+    background:rgba(30,159,212,.08);
+    border:1px solid rgba(30,159,212,.25);
+    padding:.3rem .6rem;
+    white-space:nowrap;
+  }
+
+  h2.section-title {
+    font-family:'DM Serif Display',serif;
+    font-size:1.6rem; font-weight:400;
+    color:var(--white);
+  }
+
+  h3.sub-title {
+    font-family:'DM Sans',sans-serif;
+    font-size:1rem; font-weight:600;
+    color:var(--white);
+    margin-bottom:1rem;
+    margin-top:2rem;
+  }
+
+  p.desc {
+    color:var(--white-dim);
+    font-size:.9rem;
+    line-height:1.75;
+    margin-bottom:1rem;
+  }
+
+  /* ── TOKEN GROUPS ── */
+  .token-group {
+    background: var(--navy-mid);
+    border: 1px solid var(--line);
+    margin-bottom:1.5rem;
+  }
+
+  .token-group-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+
+  .token-group-title {
+    font-family:'Space Mono',monospace;
+    font-size:.7rem; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--cyan);
+  }
+
+  .token-complexity {
+    font-family:'Space Mono',monospace;
+    font-size:.6rem; letter-spacing:.08em;
+    padding:.2rem .5rem;
+  }
+  .complexity-easy { color:var(--green); border:1px solid var(--green); }
+  .complexity-medium { color:var(--amber); border:1px solid var(--amber); }
+  .complexity-hard { color:var(--red); border:1px solid var(--red); }
+
+  .token-list { padding: 1.25rem 1.5rem; display:flex; flex-direction:column; gap:.75rem; }
+
+  .token-item {
+    display:grid; grid-template-columns: 1fr 1fr 1fr;
+    gap:1rem; align-items:start;
+    padding-bottom:.75rem;
+    border-bottom: 1px solid var(--white-faint);
+  }
+  .token-item:last-child { border-bottom:none; padding-bottom:0; }
+
+  .token-name {
+    font-family:'Space Mono',monospace;
+    font-size:.72rem;
+    color:var(--white);
+  }
+
+  .token-current {
+    font-size:.8rem;
+    color:var(--white-dim);
+  }
+
+  .token-current code {
+    font-family:'Space Mono',monospace;
+    font-size:.68rem;
+    background:rgba(255,255,255,.07);
+    padding:.15rem .4rem;
+    color:var(--cyan-bright);
+  }
+
+  .token-question {
+    font-size:.8rem;
+    color:var(--amber);
+    line-height:1.5;
+  }
+
+  /* Color swatches */
+  .color-swatch {
+    display:inline-block; width:14px; height:14px;
+    border-radius:2px; margin-right:.4rem;
+    vertical-align:middle;
+    border:1px solid rgba(255,255,255,.15);
+  }
+
+  /* ── COMPONENT CARDS ── */
+  .component-card {
+    background: var(--navy-mid);
+    border: 1px solid var(--line);
+    margin-bottom:1.5rem;
+    overflow:hidden;
+  }
+
+  .component-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--line);
+    display:flex; align-items:center; gap:1rem; flex-wrap:wrap;
+  }
+
+  .component-name {
+    font-family:'DM Serif Display',serif;
+    font-size:1.1rem; font-weight:400;
+  }
+
+  .component-id {
+    font-family:'Space Mono',monospace;
+    font-size:.65rem; letter-spacing:.1em;
+    color:var(--white-dim);
+    background:rgba(255,255,255,.05);
+    padding:.25rem .5rem;
+  }
+
+  .component-status {
+    font-family:'Space Mono',monospace;
+    font-size:.6rem; letter-spacing:.1em; text-transform:uppercase;
+    padding:.2rem .5rem;
+    margin-left:auto;
+  }
+  .status-locked { color:var(--green); border:1px solid var(--green); }
+  .status-review { color:var(--amber); border:1px solid var(--amber); }
+  .status-custom { color:var(--purple); border:1px solid var(--purple); }
+
+  .component-body {
+    padding: 1.5rem;
+    display:grid; grid-template-columns:1fr 1fr; gap:2rem;
+  }
+
+  .component-col-title {
+    font-family:'Space Mono',monospace;
+    font-size:.65rem; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--white-dim);
+    margin-bottom:1rem;
+    padding-bottom:.5rem;
+    border-bottom:1px solid var(--white-faint);
+  }
+
+  .data-field {
+    margin-bottom:1rem;
+  }
+
+  .data-label {
+    font-size:.72rem;
+    font-weight:600;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--white-dim);
+    margin-bottom:.3rem;
+  }
+
+  .data-value {
+    font-size:.85rem;
+    color:var(--white);
+    line-height:1.6;
+    background:rgba(255,255,255,.04);
+    padding:.5rem .75rem;
+    border-left:2px solid var(--cyan);
+  }
+
+  .data-value.placeholder {
+    color:var(--amber);
+    border-left-color:var(--amber);
+    font-style:italic;
+  }
+
+  .data-value.confirmed {
+    border-left-color:var(--green);
+  }
+
+  .question-list {
+    list-style:none;
+    display:flex; flex-direction:column; gap:.6rem;
+  }
+
+  .question-item {
+    display:flex; gap:.75rem; align-items:start;
+    font-size:.85rem; color:var(--white-dim); line-height:1.5;
+  }
+
+  .q-num {
+    font-family:'Space Mono',monospace;
+    font-size:.65rem; color:var(--amber);
+    background:rgba(245,158,11,.1);
+    border:1px solid rgba(245,158,11,.3);
+    padding:.15rem .4rem;
+    white-space:nowrap;
+    flex-shrink:0;
+    margin-top:.1rem;
+  }
+
+  /* ── PRIORITY TABLE ── */
+  .priority-table {
+    width:100%; border-collapse:collapse;
+    font-size:.85rem;
+  }
+  .priority-table th {
+    font-family:'Space Mono',monospace;
+    font-size:.65rem; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--white-dim);
+    padding:.75rem 1rem;
+    text-align:left;
+    background:rgba(255,255,255,.03);
+    border-bottom:1px solid var(--line);
+  }
+  .priority-table td {
+    padding:.75rem 1rem;
+    border-bottom:1px solid var(--white-faint);
+    vertical-align:top;
+    line-height:1.5;
+  }
+  .priority-table tr:last-child td { border-bottom:none; }
+  .priority-table tr:hover td { background:rgba(30,159,212,.04); }
+
+  .prio-badge {
+    font-family:'Space Mono',monospace;
+    font-size:.6rem; letter-spacing:.08em;
+    padding:.2rem .5rem; white-space:nowrap;
+  }
+  .prio-1 { color:var(--red); border:1px solid var(--red); }
+  .prio-2 { color:var(--amber); border:1px solid var(--amber); }
+  .prio-3 { color:var(--green); border:1px solid var(--green); }
+
+  /* ── CALLOUT ── */
+  .callout {
+    padding:1rem 1.25rem;
+    border-left:3px solid var(--cyan);
+    background:rgba(30,159,212,.07);
+    font-size:.875rem;
+    color:var(--white-dim);
+    line-height:1.7;
+    margin-bottom:1rem;
+  }
+  .callout strong { color:var(--white); }
+  .callout.warn {
+    border-left-color:var(--amber);
+    background:rgba(245,158,11,.07);
+  }
+  .callout.tip {
+    border-left-color:var(--green);
+    background:rgba(34,197,94,.07);
+  }
+
+  /* ── SUMMARY BOX ── */
+  .summary-box {
+    background: var(--navy-light);
+    border: 1px solid var(--cyan);
+    padding:2rem;
+    margin-top:3rem;
+  }
+  .summary-box h3 {
+    font-family:'DM Serif Display',serif;
+    font-size:1.3rem; font-weight:400;
+    margin-bottom:1.5rem;
+    color:var(--cyan-bright);
+  }
+  .summary-grid {
+    display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;
+  }
+  .summary-item h4 {
+    font-family:'Space Mono',monospace;
+    font-size:.65rem; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--white-dim); margin-bottom:.5rem;
+  }
+  .summary-item p {
+    font-size:.875rem; color:var(--white); line-height:1.6;
+  }
+
+  @media(max-width:900px) {
+    .layout { grid-template-columns:1fr; }
+    .sidebar { display:none; }
+    .main { padding:1.5rem; }
+    .component-body { grid-template-columns:1fr; }
+    .token-item { grid-template-columns:1fr; }
+    .summary-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <div class="topbar-logo">Instituto <span>VI3</span></div>
+  </div>
+  <div class="topbar-subtitle">Design Tokens · Componentes · Guia de Personalização</div>
+  <div class="topbar-badge">VERSÃO BETA — 2026</div>
+</div>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Tokens de Design</div>
+      <a href="#cores">Cores & Paleta</a>
+      <a href="#tipografia">Tipografia</a>
+      <a href="#espacamento">Espaçamento & Layout</a>
+      <a href="#animacoes">Animações & Motion</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Componentes</div>
+      <a href="#c-nav">NAV — Navegação</a>
+      <a href="#c-hero">HERO — Cabeçalho</a>
+      <a href="#c-stats">STATS — Métricas</a>
+      <a href="#c-about">ABOUT — Sobre</a>
+      <a href="#c-method">METHOD — M.A.R.</a>
+      <a href="#c-personas">PERSONAS — Para Quem</a>
+      <a href="#c-quiz">QUIZ CTA</a>
+      <a href="#c-values">VALUES — Valores</a>
+      <a href="#c-areas">AREAS — Instituto</a>
+      <a href="#c-mission">MISSION — Missão</a>
+      <a href="#c-footer">FOOTER</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Visão Geral</div>
+      <a href="#prioridades">Tabela de Prioridades</a>
+      <a href="#resumo">Checklist Final</a>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- INTRO -->
+    <div class="doc-section">
+      <div class="callout">
+        <strong>Como usar este documento:</strong> Cada seção contém os tokens atuais do site (o que está implementado), os campos que precisam de resposta sua, e um índice de perguntas para personalização máxima. Responda às perguntas na ordem de prioridade indicada e, a cada rodada, o site fica mais seu.
+      </div>
+      <div class="callout tip">
+        <strong>Legenda de status:</strong><br>
+        🟢 <strong>Confirmado</strong> — dado já existe nos documentos<br>
+        🟡 <strong>Placeholder</strong> — texto provisório, precisa de confirmação<br>
+        🔴 <strong>Ausente</strong> — informação não existe ainda, precisa ser criada
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         TOKENS DE DESIGN
+    ══════════════════════════════════════════ -->
+
+    <div class="doc-section" id="cores">
+      <div class="doc-section-header">
+        <span class="section-num">TOKEN 01</span>
+        <h2 class="section-title">Cores & Paleta</h2>
+      </div>
+
+      <p class="desc">O site usa um sistema de 6 variáveis CSS de cor. Você pode alterar qualquer uma delas e o efeito se propaga em todo o site automaticamente.</p>
+
+      <div class="token-group">
+        <div class="token-group-header">
+          <span class="token-group-title">Cores Primárias</span>
+          <span class="token-complexity complexity-easy">FÁCIL DE ALTERAR</span>
+        </div>
+        <div class="token-list">
+          <div class="token-item">
+            <div>
+              <div class="token-name">--navy (fundo principal)</div>
+            </div>
+            <div class="token-current"><span class="color-swatch" style="background:#0A1628"></span><code>#0A1628</code></div>
+            <div class="token-question">Esse azul-marinho está certo para você? Quer mais escuro (tipo #060D1A), mais claro (tipo #0F2240), ou manter?</div>
+          </div>
+          <div class="token-item">
+            <div>
+              <div class="token-name">--cyan (cor de destaque)</div>
+            </div>
+            <div class="token-current"><span class="color-swatch" style="background:#1E9FD4"></span><code>#1E9FD4</code></div>
+            <div class="token-question">O azul-ciano é a cor que "assina" o VI3. Esse tom está correto? Quer testar variações mais vivas (#00B4D8) ou mais sóbrias (#1A85B3)?</div>
+          </div>
+          <div class="token-item">
+            <div>
+              <div class="token-name">--cyan-bright (hover / ênfase)</div>
+            </div>
+            <div class="token-current"><span class="color-swatch" style="background:#2EC4F0"></span><code>#2EC4F0</code></div>
+            <div class="token-question">Cor dos textos em itálico e em destaque. Deve ser sempre mais claro que --cyan. Aprovado?</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="token-group">
+        <div class="token-group-header">
+          <span class="token-group-title">Cores Neutras & Estrutura</span>
+          <span class="token-complexity complexity-easy">FÁCIL DE ALTERAR</span>
+        </div>
+        <div class="token-list">
+          <div class="token-item">
+            <div><div class="token-name">--navy-mid (fundo de seções alternadas)</div></div>
+            <div class="token-current"><code>#0D1F3C</code></div>
+            <div class="token-question">Usado para criar contraste entre seções. Manter?</div>
+          </div>
+          <div class="token-item">
+            <div><div class="token-name">--white (texto principal)</div></div>
+            <div class="token-current"><code>#F0F4FF</code></div>
+            <div class="token-question">Branco levemente azulado, combina com navy. Prefere branco puro (#FFFFFF) ou manter esse tom suave?</div>
+          </div>
+          <div class="token-item">
+            <div><div class="token-name">--line (bordas e separadores)</div></div>
+            <div class="token-current"><code>rgba(30,159,212, 0.18)</code></div>
+            <div class="token-question">Bordas translúcidas em ciano. Quer linhas mais visíveis (0.3) ou mais sutis (0.1)?</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <strong>Pergunta-chave sobre cores:</strong> Existe alguma cor que já é usada em materiais do Instituto VI3 (Instagram, apresentações, cartão de visita) que precisa estar presente aqui para manter consistência de marca?
+      </div>
+    </div>
+
+    <!-- TIPOGRAFIA -->
+    <div class="doc-section" id="tipografia">
+      <div class="doc-section-header">
+        <span class="section-num">TOKEN 02</span>
+        <h2 class="section-title">Tipografia</h2>
+      </div>
+
+      <div class="token-group">
+        <div class="token-group-header">
+          <span class="token-group-title">Fontes em Uso</span>
+          <span class="token-complexity complexity-medium">ALTERAR COM CUIDADO</span>
+        </div>
+        <div class="token-list">
+          <div class="token-item">
+            <div><div class="token-name">DM Serif Display</div><div style="font-size:.75rem;color:var(--white-dim);margin-top:.3rem;">Títulos h1, h2, h3, logo</div></div>
+            <div class="token-current">Serif elegante, personalidade editorial. <em style="font-family:'DM Serif Display',serif; font-size:1rem;">Instituto VI3</em></div>
+            <div class="token-question">Gostou dessa fonte nos títulos? Alternativas: Playfair Display (mais clássico), Fraunces (mais moderno), ou Sora (mais tech)?</div>
+          </div>
+          <div class="token-item">
+            <div><div class="token-name">DM Sans</div><div style="font-size:.75rem;color:var(--white-dim);margin-top:.3rem;">Corpo do texto, botões, parágrafo</div></div>
+            <div class="token-current">Sans-serif limpo, altamente legível</div>
+            <div class="token-question">Essa fonte para textos corridos está confortável de ler? Alternar para Outfit ou Plus Jakarta Sans se quiser algo mais moderno.</div>
+          </div>
+          <div class="token-item">
+            <div><div class="token-name">Space Mono</div><div style="font-size:.75rem;color:var(--white-dim);margin-top:.3rem;">Tags, labels, numerações, badges</div></div>
+            <div class="token-current"><span style="font-family:'Space Mono',monospace; font-size:.8rem;">// SEÇÃO 01 — TAG</span></div>
+            <div class="token-question">O estilo de "código" nas etiquetas remete a tech/inovação. É uma identidade que faz sentido para o VI3? Ou prefere algo mais corporativo?</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="token-group">
+        <div class="token-group-header">
+          <span class="token-group-title">Tamanhos & Escala</span>
+          <span class="token-complexity complexity-easy">FÁCIL DE ALTERAR</span>
+        </div>
+        <div class="token-list">
+          <div class="token-item">
+            <div><div class="token-name">Hero h1 — tamanho</div></div>
+            <div class="token-current"><code>clamp(2.8rem, 5vw, 4.4rem)</code> — responsivo</div>
+            <div class="token-question">O título do Hero deve ser GRANDE e impactante. Esse tamanho está bem? Quer maior (5rem) ou menor?</div>
+          </div>
+          <div class="token-item">
+            <div><div class="token-name">Subtítulo hero — tamanho</div></div>
+            <div class="token-current"><code>1.1rem</code></div>
+            <div class="token-question">O parágrafo abaixo do título do Hero está legível e confortável?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ESPAÇAMENTO -->
+    <div class="doc-section" id="espacamento">
+      <div class="doc-section-header">
+        <span class="section-num">TOKEN 03</span>
+        <h2 class="section-title">Espaçamento & Layout</h2>
+      </div>
+
+      <div class="token-group">
+        <div class="token-group-header">
+          <span class="token-group-title">Ritmo Vertical das Seções</span>
+          <span class="token-complexity complexity-easy">FÁCIL DE ALTERAR</span>
+        </div>
+        <div class="token-list">
+          <div class="token-item">
+            <div><div class="token-name">Padding de seções</div></div>
+            <div class="token-current"><code>7rem</code> acima e abaixo</div>
+            <div class="token-question">O site usa muito espaço em branco (respiro). Gostou desse ritmo ou quer seções mais densas/compactas?</div>
+          </div>
+          <div class="token-item">
+            <div><div class="token-name">Padding lateral (desktop)</div></div>
+            <div class="token-current"><code>4rem</code> (64px)</div>
+            <div class="token-question">As margens laterais estão bem? Quer mais largura de conteúdo (menos margem) ou mais respiro?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANIMAÇÕES -->
+    <div class="doc-section" id="animacoes">
+      <div class="doc-section-header">
+        <span class="section-num">TOKEN 04</span>
+        <h2 class="section-title">Animações & Motion</h2>
+      </div>
+
+      <div class="token-group">
+        <div class="token-group-header">
+          <span class="token-group-title">Efeitos Existentes</span>
+          <span class="token-complexity complexity-medium">ALTERAR COM CUIDADO</span>
+        </div>
+        <div class="token-list">
+          <div class="token-item">
+            <div><div class="token-name">Fade-up ao scroll</div></div>
+            <div class="token-current">Elementos surgem de baixo ao entrar na tela</div>
+            <div class="token-question">Esse efeito de entrada você aprovou ou quer remover? Tem usuários que preferem sites sem animação.</div>
+          </div>
+          <div class="token-item">
+            <div><div class="token-name">Ponto pulsante no hero</div></div>
+            <div class="token-current">Bolinha verde animada no badge "Instituto VI3"</div>
+            <div class="token-question">Esse detalhe de "ao vivo/ativo" faz sentido para o VI3? Remover ou manter?</div>
+          </div>
+          <div class="token-item">
+            <div><div class="token-name">Glow azul no hero</div></div>
+            <div class="token-current">Orbe radial ciano no lado direito do hero</div>
+            <div class="token-question">O efeito atmosférico do hero está sutil o suficiente? Quer mais intenso, menos ou sem?</div>
+          </div>
+          <div class="token-item">
+            <div><div class="token-name">Grid de linhas no hero</div></div>
+            <div class="token-current">Grelha de pontos transparentes ao fundo</div>
+            <div class="token-question">O grid dá sensação de "tech/precisão". Aprovado ou prefere fundo liso?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         COMPONENTES
+    ══════════════════════════════════════════ -->
+
+    <!-- NAV -->
+    <div class="doc-section" id="c-nav">
+      <div class="doc-section-header">
+        <span class="section-num">COMP 01</span>
+        <h2 class="section-title">NAV — Barra de Navegação</h2>
+      </div>
+
+      <div class="component-card">
+        <div class="component-header">
+          <span class="component-name">Navegação Principal</span>
+          <span class="component-id">nav#top</span>
+          <span class="component-status status-review">REVISAR</span>
+        </div>
+        <div class="component-body">
+          <div>
+            <div class="component-col-title">Estado Atual</div>
+            <div class="data-field">
+              <div class="data-label">Logo texto</div>
+              <div class="data-value confirmed">"Instituto VI3"</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Links de menu</div>
+              <div class="data-value placeholder">Método M.A.R. · Para Quem · Valores · Instituto</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">CTA do nav</div>
+              <div class="data-value placeholder">"FAZER O QUIZ" → #quiz</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Logo símbolo</div>
+              <div class="data-value placeholder">SVG vetorial genérico baseado no logo enviado</div>
+            </div>
+          </div>
+          <div>
+            <div class="component-col-title">Perguntas para Personalizar</div>
+            <ul class="question-list">
+              <li class="question-item"><span class="q-num">Q1</span>Você tem o arquivo SVG ou AI do logo original para substituir o símbolo vetorial que criamos?</li>
+              <li class="question-item"><span class="q-num">Q2</span>Quer "Instituto VI3" como nome completo ou só "VI3" na nav? Ou uma abreviação?</li>
+              <li class="question-item"><span class="q-num">Q3</span>O CTA "Fazer o Quiz" é o principal convite da barra de navegação ou prefere outro (ex: "Conheça o Método" ou "Começar")?</li>
+              <li class="question-item"><span class="q-num">Q4</span>Quais seções devem aparecer no menu? (pode remover "Valores" se quiser simplificar)</li>
+              <li class="question-item"><span class="q-num">Q5</span>Você tem redes sociais que devem estar no nav (Instagram, LinkedIn)?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <div class="doc-section" id="c-hero">
+      <div class="doc-section-header">
+        <span class="section-num">COMP 02</span>
+        <h2 class="section-title">HERO — Seção de Abertura</h2>
+      </div>
+
+      <div class="callout">É o componente mais crítico do site. A primeira impressão é formada em menos de 3 segundos. Cada palavra aqui precisa ser validada com você.</div>
+
+      <div class="component-card">
+        <div class="component-header">
+          <span class="component-name">Hero Principal</span>
+          <span class="component-id">section.hero</span>
+          <span class="component-status status-review">REVISAR</span>
+        </div>
+        <div class="component-body">
+          <div>
+            <div class="component-col-title">Textos Atuais</div>
+            <div class="data-field">
+              <div class="data-label">Badge / Tag de credibilidade</div>
+              <div class="data-value placeholder">"Instituto VI3 — Inteligência Aplicada"</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Headline (título principal)</div>
+              <div class="data-value placeholder">"Transforme seu conhecimento em autoridade real."</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Subheadline (parágrafo)</div>
+              <div class="data-value placeholder">"Unimos inteligência humana e artificial para posicionar especialistas..."</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">CTA Principal</div>
+              <div class="data-value placeholder">"DESCOBRIR MEU PERFIL →" → #quiz</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">CTA Secundário</div>
+              <div class="data-value placeholder">"Conhecer o Método" → #metodo</div>
+            </div>
+          </div>
+          <div>
+            <div class="component-col-title">Perguntas para Personalizar</div>
+            <ul class="question-list">
+              <li class="question-item"><span class="q-num">Q1</span><strong style="color:var(--white);">CRÍTICO</strong> — Qual é a grande promessa do VI3 em 1 frase? (A headline. Pense: "Eu ajudo [QUEM] a [CONSEGUIR O QUÊ] através de [COMO]")</li>
+              <li class="question-item"><span class="q-num">Q2</span>O texto do badge ("Instituto VI3 — Inteligência Aplicada") representa bem o posicionamento? Ou quer algo mais específico (ex: "Método M.A.R. — Autoridade Reconhecida")?</li>
+              <li class="question-item"><span class="q-num">Q3</span>O CTA principal leva ao Quiz. Isso está certo? Ou em alguns momentos vai levar à página de vendas diretamente?</li>
+              <li class="question-item"><span class="q-num">Q4</span>Você tem alguma foto sua (Rafael) de alta qualidade que poderíamos incluir no hero para humanizar? (rosto, consultoria, ambiente profissional)</li>
+              <li class="question-item"><span class="q-num">Q5</span>Tem alguma prova de credibilidade para colocar logo abaixo do título? (ex: "15 anos de experiência", "Formado em Direito e Contabilidade", "Metodologia baseada em SPIN, JTBD e Cialdini")</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="doc-section" id="c-stats">
+      <div class="doc-section-header">
+        <span class="section-num">COMP 03</span>
+        <h2 class="section-title">STATS — Banda de Métricas</h2>
+      </div>
+
+      <div class="component-card">
+        <div class="component-header">
+          <span class="component-name">4 Números de Impacto</span>
+          <span class="component-id">div.stats-band</span>
+          <span class="component-status status-review">REVISAR</span>
+        </div>
+        <div class="component-body">
+          <div>
+            <div class="component-col-title">Dados Atuais</div>
+            <div class="data-field">
+              <div class="data-label">Stat 1</div>
+              <div class="data-value placeholder">"3×" — Aumento médio de valor percebido</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Stat 2</div>
+              <div class="data-value confirmed">"61%" — Clientes pagam mais por especialistas (Medallia)</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Stat 3</div>
+              <div class="data-value confirmed">"15+" — Anos de experiência</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Stat 4</div>
+              <div class="data-value placeholder">"3" — Pilares do Instituto</div>
+            </div>
+          </div>
+          <div>
+            <div class="component-col-title">Perguntas para Personalizar</div>
+            <ul class="question-list">
+              <li class="question-item"><span class="q-num">Q1</span>O "3×" de aumento de valor percebido — é um dado real de pesquisa ou uma estimativa? Se for promessa sua, precisamos de embasamento.</li>
+              <li class="question-item"><span class="q-num">Q2</span>Você tem quantos clientes/cases consultados ao longo dos 15 anos? (ex: "200+ empresas atendidas")</li>
+              <li class="question-item"><span class="q-num">Q3</span>Algum número de resultado que você possa comprovar? (ex: aumento de faturamento de clientes, número de projetos)</li>
+              <li class="question-item"><span class="q-num">Q4</span>Quer substituir algum stat por algo mais ligado ao Método M.A.R. especificamente?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="doc-section" id="c-about">
+      <div class="doc-section-header">
+        <span class="section-num">COMP 04</span>
+        <h2 class="section-title">ABOUT — Sobre o Instituto</h2>
+      </div>
+
+      <div class="component-card">
+        <div class="component-header">
+          <span class="component-name">Seção Sobre + Diagrama</span>
+          <span class="component-id">section.about</span>
+          <span class="component-status status-review">REVISAR</span>
+        </div>
+        <div class="component-body">
+          <div>
+            <div class="component-col-title">Conteúdo Atual</div>
+            <div class="data-field">
+              <div class="data-label">Tag da seção</div>
+              <div class="data-value placeholder">"// sobre o instituto"</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Título h2</div>
+              <div class="data-value placeholder">"Valor percebido é uma ciência."</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Parágrafo lead</div>
+              <div class="data-value placeholder">"O Instituto VI3 nasceu da convicção que competência técnica não basta..."</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Parágrafo 2</div>
+              <div class="data-value confirmed">"Fundado por Rafael, consultor com 15 anos..."</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Diagrama triangular</div>
+              <div class="data-value placeholder">SVG: Diagnóstico / Método / Prova com VI3 no centro</div>
+            </div>
+          </div>
+          <div>
+            <div class="component-col-title">Perguntas para Personalizar</div>
+            <ul class="question-list">
+              <li class="question-item"><span class="q-num">Q1</span>Qual é a história de origem do Instituto VI3? Por que "VI3"? O que significa o nome? Essa história precisa estar aqui.</li>
+              <li class="question-item"><span class="q-num">Q2</span>Você quer que sua esposa (psicóloga) apareça nesta seção como co-fundadora ou apenas na seção de frentes do Instituto?</li>
+              <li class="question-item"><span class="q-num">Q3</span>Os 3 vértices do diagrama (Diagnóstico / Método / Prova) representam bem os pilares visuais? Ou prefere (Business / Psicologia / IA)?</li>
+              <li class="question-item"><span class="q-num">Q4</span>Você tem uma foto profissional sua que poderíamos usar no lugar do diagrama (ou ao lado)?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- METHOD -->
+    <div class="doc-section" id="c-method">
+      <div class="doc-section-header">
+        <span class="section-num">COMP 05</span>
+        <h2 class="section-title">METHOD — Método M.A.R.</h2>
+      </div>
+
+      <div class="component-card">
+        <div class="component-header">
+          <span class="component-name">3 Pilares do Método</span>
+          <span class="component-id">section.method</span>
+          <span class="component-status status-locked">CONTEÚDO CONFIRMADO</span>
+        </div>
+        <div class="component-body">
+          <div>
+            <div class="component-col-title">Conteúdo (dos seus docs)</div>
+            <div class="data-field">
+              <div class="data-label">Pilar 1</div>
+              <div class="data-value confirmed">Mapa do Tesouro — Diagnóstico, SPIN Selling</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Pilar 2</div>
+              <div class="data-value confirmed">Receita Exclusiva — Personalização, Jobs To Be Done</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Pilar 3</div>
+              <div class="data-value confirmed">Metamorfose Espelhada — Prova Social, Cialdini</div>
+            </div>
+          </div>
+          <div>
+            <div class="component-col-title">Perguntas de Refinamento</div>
+            <ul class="question-list">
+              <li class="question-item"><span class="q-num">Q1</span>Os textos descritivos dos 3 pilares que escrevi estão fiéis ao que você ensina? Corrija qualquer imprecisão técnica.</li>
+              <li class="question-item"><span class="q-num">Q2</span>Você tem uma frase/slogan para cada pilar? (algo que você já usa ao explicar para alunos)</li>
+              <li class="question-item"><span class="q-num">Q3</span>Quer adicionar um CTA aqui ("Comprar o Método M.A.R. por R$147") ou manter como conteúdo informativo?</li>
+              <li class="question-item"><span class="q-num">Q4</span>Tem alguma referência visual que você usa para explicar o M.A.R. (slides, diagramas) que poderíamos recriar aqui?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PERSONAS -->
+    <div class="doc-section" id="c-personas">
+      <div class="doc-section-header">
+        <span class="section-num">COMP 06</span>
+        <h2 class="section-title">PERSONAS — Para Quem É</h2>
+      </div>
+
+      <div class="component-card">
+        <div class="component-header">
+          <span class="component-name">3 Cards de Persona</span>
+          <span class="component-id">section.forwhom</span>
+          <span class="component-status status-review">REVISAR</span>
+        </div>
+        <div class="component-body">
+          <div>
+            <div class="component-col-title">Personas Atuais</div>
+            <div class="data-field">
+              <div class="data-label">Persona 1 (prioritária)</div>
+              <div class="data-value confirmed">Freelancer Especialista — 28-35 anos, R$3k-8k/mês, "Competente Desconhecido"</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Persona 2</div>
+              <div class="data-value placeholder">Consultor ou Coach — metodologia sólida, dificuldade de comunicar ROI</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Persona 3</div>
+              <div class="data-value placeholder">Especialista Técnico — domínio profundo, sem "tradutor de valor"</div>
+            </div>
+          </div>
+          <div>
+            <div class="component-col-title">Perguntas para Personalizar</div>
+            <ul class="question-list">
+              <li class="question-item"><span class="q-num">Q1</span><strong style="color:var(--white);">CRÍTICO</strong> — Qual é a maior dor em palavras do próprio freelancer "Competente Desconhecido"? (Use linguagem que ele usaria, não termos de marketing)</li>
+              <li class="question-item"><span class="q-num">Q2</span>Você tem um nome para a persona principal? (nome fictício humaniza — ex: "O João, 32 anos, dev freelancer...")</li>
+              <li class="question-item"><span class="q-num">Q3</span>As personas 2 e 3 ainda não estão ativas no produto. Quer mostrá-las no site ou focar apenas na Persona 1 agora?</li>
+              <li class="question-item"><span class="q-num">Q4</span>Você tem uma frase que já ouviu de um cliente real que resume a dor deles? (ex: "Meu cliente pediu desconto e eu dei, mesmo sabendo que estava abaixo do mercado")</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ CTA -->
+    <div class="doc-section" id="c-quiz">
+      <div class="doc-section-header">
+        <span class="section-num">COMP 07</span>
+        <h2 class="section-title">QUIZ CTA — Chamada para o Quiz</h2>
+      </div>
+
+      <div class="callout warn">Este é o componente de conversão mais importante do site institucional. Cada palavra afeta a taxa de cliques.</div>
+
+      <div class="component-card">
+        <div class="component-header">
+          <span class="component-name">Seção CTA do Quiz</span>
+          <span class="component-id">section.quiz-cta</span>
+          <span class="component-status status-review">REVISAR</span>
+        </div>
+        <div class="component-body">
+          <div>
+            <div class="component-col-title">Textos Atuais</div>
+            <div class="data-field">
+              <div class="data-label">Título</div>
+              <div class="data-value placeholder">"Qual é o seu perfil de autoridade?"</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Subtexto</div>
+              <div class="data-value placeholder">"Em 3 minutos, o Quiz do Freelancer identifica onde você está travado..."</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Botão</div>
+              <div class="data-value placeholder">"FAZER O QUIZ GRATUITO →"</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Perfis exibidos</div>
+              <div class="data-value confirmed">Invisível · Desconhecida · Emergente · Estabelecida</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">URL do quiz</div>
+              <div class="data-value placeholder">🔴 AUSENTE — URL ainda não existe</div>
+            </div>
+          </div>
+          <div>
+            <div class="component-col-title">Perguntas para Personalizar</div>
+            <ul class="question-list">
+              <li class="question-item"><span class="q-num">Q1</span>O quiz já está construído em alguma plataforma (Typeform, Hotmart, outro)? Qual é a URL real?</li>
+              <li class="question-item"><span class="q-num">Q2</span>Os 4 perfis de resultado (Invisível, Desconhecida, Emergente, Estabelecida) são os nomes finais? Estão femininos, quer masculino/neutro?</li>
+              <li class="question-item"><span class="q-num">Q3</span>O texto "Em 3 minutos" é preciso? Quantas perguntas tem o quiz?</li>
+              <li class="question-item"><span class="q-num">Q4</span>Quer adicionar uma micro-prova aqui? (ex: "Mais de 1.200 freelancers já descobriram seu perfil")</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VALUES -->
+    <div class="doc-section" id="c-values">
+      <div class="doc-section-header">
+        <span class="section-num">COMP 08</span>
+        <h2 class="section-title">VALUES — Nossos Valores</h2>
+      </div>
+
+      <div class="component-card">
+        <div class="component-header">
+          <span class="component-name">Grid de 7 Valores</span>
+          <span class="component-id">section.values</span>
+          <span class="component-status status-locked">CONTEÚDO CONFIRMADO</span>
+        </div>
+        <div class="component-body">
+          <div>
+            <div class="component-col-title">Valores (da sua mensagem)</div>
+            <div class="data-field">
+              <div class="data-label">01</div>
+              <div class="data-value confirmed">Evidência antes de opinião</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">02</div>
+              <div class="data-value confirmed">Clareza que vira ação</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">03 → 07</div>
+              <div class="data-value confirmed">Personalização com método · Integridade intelectual · Prova real · Respeito ao humano · IA como amplificador</div>
+            </div>
+          </div>
+          <div>
+            <div class="component-col-title">Perguntas de Refinamento</div>
+            <ul class="question-list">
+              <li class="question-item"><span class="q-num">Q1</span>Os textos explicativos de cada valor (2-3 linhas) estão corretos ou precisam de ajuste?</li>
+              <li class="question-item"><span class="q-num">Q2</span>A seção de valores faz sentido no site institucional ou é conteúdo mais para o "sobre"? (Alguns clientes preferem valores apenas na página /sobre)</li>
+              <li class="question-item"><span class="q-num">Q3</span>O card extra "Transformação mensurável" que adicionei é do seu repertório ou devo remover?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AREAS -->
+    <div class="doc-section" id="c-areas">
+      <div class="doc-section-header">
+        <span class="section-num">COMP 09</span>
+        <h2 class="section-title">AREAS — Frentes do Instituto</h2>
+      </div>
+
+      <div class="component-card">
+        <div class="component-header">
+          <span class="component-name">3 Áreas do Instituto</span>
+          <span class="component-id">section.areas</span>
+          <span class="component-status status-review">REVISAR</span>
+        </div>
+        <div class="component-body">
+          <div>
+            <div class="component-col-title">Áreas Mapeadas</div>
+            <div class="data-field">
+              <div class="data-label">Frente Business (ATIVO)</div>
+              <div class="data-value confirmed">Rafael — Método M.A.R., posicionamento, escada de valor</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Frente Psicologia (EM BREVE)</div>
+              <div class="data-value placeholder">Esposa psicóloga — nome e especialidade não informados</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Frente IA (EM BREVE)</div>
+              <div class="data-value placeholder">IA aplicada — sem responsável definido nos docs</div>
+            </div>
+          </div>
+          <div>
+            <div class="component-col-title">Perguntas para Personalizar</div>
+            <ul class="question-list">
+              <li class="question-item"><span class="q-num">Q1</span><strong style="color:var(--white);">CRÍTICO</strong> — Qual é o nome da sua esposa e como ela quer ser apresentada? (nome completo, especialidade, CRP?)</li>
+              <li class="question-item"><span class="q-num">Q2</span>Qual é o foco da frente de Psicologia? (ex: burnout, mentalidade, precificação emocional, relações no trabalho)</li>
+              <li class="question-item"><span class="q-num">Q3</span>A frente de IA tem alguém responsável definido ou é você mesmo que vai conduzir?</li>
+              <li class="question-item"><span class="q-num">Q4</span>Quer mostrar "Em breve" para as frentes futuras ou prefere omiti-las até estarem prontas?</li>
+              <li class="question-item"><span class="q-num">Q5</span>Tem produtos/serviços específicos já definidos para Psicologia e IA que podem ser mencionados?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MISSION -->
+    <div class="doc-section" id="c-mission">
+      <div class="doc-section-header">
+        <span class="section-num">COMP 10</span>
+        <h2 class="section-title">MISSION — Missão, Visão, Propósito</h2>
+      </div>
+
+      <div class="component-card">
+        <div class="component-header">
+          <span class="component-name">Bloco Missão/Visão</span>
+          <span class="component-id">section.mission</span>
+          <span class="component-status status-locked">CONTEÚDO CONFIRMADO</span>
+        </div>
+        <div class="component-body">
+          <div>
+            <div class="component-col-title">Textos (da sua mensagem)</div>
+            <div class="data-field">
+              <div class="data-label">Missão</div>
+              <div class="data-value confirmed">"Unir inteligência humana e artificial para transformar especialistas em referências..."</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Visão</div>
+              <div class="data-value confirmed">"Ser o instituto de referência em desenvolvimento de autoridade e valor no Brasil..."</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Por que existimos</div>
+              <div class="data-value placeholder">Texto criado por mim — validar com você</div>
+            </div>
+          </div>
+          <div>
+            <div class="component-col-title">Perguntas de Refinamento</div>
+            <ul class="question-list">
+              <li class="question-item"><span class="q-num">Q1</span>Das duas versões de Missão que você me enviou, qual é a oficial? ("Unir inteligência humana e artificial..." ou a versão mais curta "Unir a inteligência do especialista...")</li>
+              <li class="question-item"><span class="q-num">Q2</span>O texto "Por que existimos" que criei está alinhado com seu discurso? Corrija se necessário.</li>
+              <li class="question-item"><span class="q-num">Q3</span>Você tem uma história pessoal que motivou criar o VI3? Um "momento de virada"? Isso seria muito poderoso aqui.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="doc-section" id="c-footer">
+      <div class="doc-section-header">
+        <span class="section-num">COMP 11</span>
+        <h2 class="section-title">FOOTER — Rodapé</h2>
+      </div>
+
+      <div class="component-card">
+        <div class="component-header">
+          <span class="component-name">Rodapé do Site</span>
+          <span class="component-id">footer</span>
+          <span class="component-status status-review">REVISAR</span>
+        </div>
+        <div class="component-body">
+          <div>
+            <div class="component-col-title">Estado Atual</div>
+            <div class="data-field">
+              <div class="data-label">Links</div>
+              <div class="data-value placeholder">Método M.A.R. · Quiz · Termos · Privacidade</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Copyright</div>
+              <div class="data-value placeholder">"© 2026 Instituto VI3. Valor e Inteligência."</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">Redes sociais</div>
+              <div class="data-value placeholder">🔴 AUSENTE — links não informados</div>
+            </div>
+            <div class="data-field">
+              <div class="data-label">CNPJ / dados legais</div>
+              <div class="data-value placeholder">🔴 AUSENTE — MEI ainda sendo aberto</div>
+            </div>
+          </div>
+          <div>
+            <div class="component-col-title">Perguntas para Personalizar</div>
+            <ul class="question-list">
+              <li class="question-item"><span class="q-num">Q1</span>Qual é o handle do Instagram do Instituto? (@institutovi3? @rafaelvi3?)</li>
+              <li class="question-item"><span class="q-num">Q2</span>Tem perfil no LinkedIn? (do Instituto ou seu pessoal?)</li>
+              <li class="question-item"><span class="q-num">Q3</span>Qual é o domínio definitivo? (metodo-mar.com.br ou institutovi3.com.br)</li>
+              <li class="question-item"><span class="q-num">Q4</span>Quando o MEI for aberto, qual CNPJ e razão social incluir?</li>
+              <li class="question-item"><span class="q-num">Q5</span>Você tem ou vai criar páginas de Termos e Privacidade? (obrigatório para compliance)</li>
+              <li class="question-item"><span class="q-num">Q6</span>Quer um campo de newsletter no footer? ("Receba conteúdo do VI3")</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         COMPONENTES AUSENTES
+    ══════════════════════════════════════════ -->
+
+    <div class="doc-section">
+      <div class="doc-section-header">
+        <span class="section-num">COMP +</span>
+        <h2 class="section-title">Componentes Não Criados (mas recomendados)</h2>
+      </div>
+
+      <p class="desc">Estes componentes não existem no site atual mas são padrão em sites de alto desempenho para o seu segmento.</p>
+
+      <div class="component-card">
+        <div class="component-header">
+          <span class="component-name">SOCIAL PROOF — Depoimentos</span>
+          <span class="component-id">section.testimonials</span>
+          <span class="component-status status-custom">CRIAR QUANDO TIVER CASES</span>
+        </div>
+        <div class="component-body">
+          <div>
+            <div class="component-col-title">O que seria</div>
+            <div class="data-field">
+              <div class="data-label">Formato</div>
+              <div class="data-value placeholder">Cards com foto, nome, cargo, resultado mensurável e depoimento curto</div>
+            </div>
+          </div>
+          <div>
+            <div class="component-col-title">O que preciso de você</div>
+            <ul class="question-list">
+              <li class="question-item"><span class="q-num">Q1</span>Você tem algum depoimento de cliente (mesmo que antigo, de consultoria) que possa adaptar?</li>
+              <li class="question-item"><span class="q-num">Q2</span>Dos primeiros alunos do M.A.R. (meses 1-3), você vai coletar depoimentos com foto ou só texto?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="component-card">
+        <div class="component-header">
+          <span class="component-name">RAFAEL — Seção do Fundador</span>
+          <span class="component-id">section.founder</span>
+          <span class="component-status status-custom">CRIAR ASSIM QUE TIVER FOTO</span>
+        </div>
+        <div class="component-body">
+          <div>
+            <div class="component-col-title">O que seria</div>
+            <div class="data-field">
+              <div class="data-label">Formato</div>
+              <div class="data-value placeholder">Foto + história pessoal + credenciais + "por que criei o VI3"</div>
+            </div>
+          </div>
+          <div>
+            <div class="component-col-title">O que preciso de você</div>
+            <ul class="question-list">
+              <li class="question-item"><span class="q-num">Q1</span>Qual é sua história em 4-6 linhas? (começou como..., descobriu que..., criou o VI3 para...)</li>
+              <li class="question-item"><span class="q-num">Q2</span>Você tem foto profissional recente?</li>
+              <li class="question-item"><span class="q-num">Q3</span>Quais credenciais listar? (Direito, Contabilidade, 15 anos, outros cursos, especializações)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="component-card">
+        <div class="component-header">
+          <span class="component-name">ESCADA DE VALOR — Produtos</span>
+          <span class="component-id">section.products</span>
+          <span class="component-status status-custom">CRIAR QUANDO TIVER TODOS OS PREÇOS</span>
+        </div>
+        <div class="component-body">
+          <div>
+            <div class="component-col-title">Dados do planejamento</div>
+            <div class="data-field">
+              <div class="data-label">Escada completa</div>
+              <div class="data-value confirmed">R$0 Quiz → R$47 Guia → R$147 M.A.R. → R$497 Mentoria → R$2.000 Consultoria</div>
+            </div>
+          </div>
+          <div>
+            <div class="component-col-title">O que preciso de você</div>
+            <ul class="question-list">
+              <li class="question-item"><span class="q-num">Q1</span>Quer mostrar a escada completa ou apenas o produto de entrada (R$147)?</li>
+              <li class="question-item"><span class="q-num">Q2</span>Os preços são os definitivos? O R$47 (tripwire) e R$497 (mentoria) já têm nome oficial?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRIORIDADES -->
+    <div class="doc-section" id="prioridades">
+      <div class="doc-section-header">
+        <span class="section-num">VISÃO GERAL</span>
+        <h2 class="section-title">Tabela de Prioridades</h2>
+      </div>
+
+      <p class="desc">Ordenado pelo impacto na conversão e no posicionamento. Responda nessa ordem.</p>
+
+      <table class="priority-table">
+        <thead>
+          <tr>
+            <th>PRIORIDADE</th>
+            <th>ITEM</th>
+            <th>COMPONENTE</th>
+            <th>O QUE PRECISO</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="prio-badge prio-1">P1 — URGENTE</span></td>
+            <td>URL real do Quiz</td>
+            <td>QUIZ CTA</td>
+            <td>Link da página do quiz (Typeform, Hotmart, etc.)</td>
+          </tr>
+          <tr>
+            <td><span class="prio-badge prio-1">P1 — URGENTE</span></td>
+            <td>Headline do Hero</td>
+            <td>HERO</td>
+            <td>Frase definitiva da proposta de valor</td>
+          </tr>
+          <tr>
+            <td><span class="prio-badge prio-1">P1 — URGENTE</span></td>
+            <td>Logo SVG original</td>
+            <td>NAV</td>
+            <td>Arquivo vetorial do símbolo VI3</td>
+          </tr>
+          <tr>
+            <td><span class="prio-badge prio-1">P1 — URGENTE</span></td>
+            <td>Handle do Instagram</td>
+            <td>FOOTER / NAV</td>
+            <td>@handle oficial do Instituto</td>
+          </tr>
+          <tr>
+            <td><span class="prio-badge prio-2">P2 — IMPORTANTE</span></td>
+            <td>Nome e dados da co-fundadora</td>
+            <td>AREAS</td>
+            <td>Nome da sua esposa + especialidade + como quer aparecer</td>
+          </tr>
+          <tr>
+            <td><span class="prio-badge prio-2">P2 — IMPORTANTE</span></td>
+            <td>Foto do Rafael</td>
+            <td>HERO / ABOUT / FOUNDER</td>
+            <td>Foto profissional de alta resolução</td>
+          </tr>
+          <tr>
+            <td><span class="prio-badge prio-2">P2 — IMPORTANTE</span></td>
+            <td>Domínio definitivo</td>
+            <td>Geral</td>
+            <td>institutovi3.com.br ou metodo-mar.com.br?</td>
+          </tr>
+          <tr>
+            <td><span class="prio-badge prio-2">P2 — IMPORTANTE</span></td>
+            <td>História de origem do VI3</td>
+            <td>ABOUT / MISSION</td>
+            <td>Por que criou o Instituto, o que significa VI3</td>
+          </tr>
+          <tr>
+            <td><span class="prio-badge prio-2">P2 — IMPORTANTE</span></td>
+            <td>Validação dos stats</td>
+            <td>STATS</td>
+            <td>Confirmar se os 4 números são precisos e comprováveis</td>
+          </tr>
+          <tr>
+            <td><span class="prio-badge prio-3">P3 — REFINAMENTO</span></td>
+            <td>Depoimentos / cases</td>
+            <td>TESTIMONIALS</td>
+            <td>Aguardar primeiros alunos (Mês 3)</td>
+          </tr>
+          <tr>
+            <td><span class="prio-badge prio-3">P3 — REFINAMENTO</span></td>
+            <td>CNPJ / dados legais</td>
+            <td>FOOTER</td>
+            <td>Aguardar abertura do MEI</td>
+          </tr>
+          <tr>
+            <td><span class="prio-badge prio-3">P3 — REFINAMENTO</span></td>
+            <td>Escada de valor completa</td>
+            <td>PRODUCTS</td>
+            <td>Aguardar lançamento dos produtos secundários</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CHECKLIST FINAL -->
+    <div class="doc-section" id="resumo">
+      <div class="doc-section-header">
+        <span class="section-num">CHECKLIST</span>
+        <h2 class="section-title">Checklist de Informações</h2>
+      </div>
+
+      <div class="summary-box">
+        <h3>Para a versão 1.0 do site ir ao ar, preciso de:</h3>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <h4>📁 Arquivos</h4>
+            <p>
+              ☐ Logo SVG / AI original<br>
+              ☐ Foto profissional do Rafael (alta res)<br>
+              ☐ Foto da co-fundadora (opcional v1.0)<br>
+              ☐ Favico / ícone do site
+            </p>
+          </div>
+          <div class="summary-item">
+            <h4>🔗 Links & URLs</h4>
+            <p>
+              ☐ URL real do Quiz<br>
+              ☐ Domínio definitivo (.com.br)<br>
+              ☐ Instagram @handle<br>
+              ☐ LinkedIn (Instituto ou pessoal)<br>
+              ☐ Link de compra Hotmart (R$147)
+            </p>
+          </div>
+          <div class="summary-item">
+            <h4>✍️ Textos</h4>
+            <p>
+              ☐ Headline definitiva do Hero<br>
+              ☐ Missão (versão final das duas que enviou)<br>
+              ☐ História de origem do VI3<br>
+              ☐ Nome + bio da co-fundadora<br>
+              ☐ Descrição de cada frente (Business / Psicologia / IA)
+            </p>
+          </div>
+          <div class="summary-item">
+            <h4>⚖️ Legal</h4>
+            <p>
+              ☐ CNPJ (após abertura MEI)<br>
+              ☐ Página de Termos de Uso<br>
+              ☐ Página de Política de Privacidade<br>
+              ☐ Consentimento de cookies (LGPD)
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // Highlight active sidebar link on scroll
+  const sections = document.querySelectorAll('[id]');
+  const sidebarLinks = document.querySelectorAll('.sidebar a');
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        sidebarLinks.forEach(a => {
+          a.classList.remove('active');
+          if (a.getAttribute('href') === '#' + e.target.id) a.classList.add('active');
+        });
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => io.observe(s));
+</script>
+</body>
+</html>

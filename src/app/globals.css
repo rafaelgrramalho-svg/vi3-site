@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+/* ===== VI3 Design Tokens — Tailwind 4 @theme ===== */
+@theme inline {
+  /* Colors — Navy backgrounds */
+  --color-navy: #0A1628;
+  --color-navy-mid: #0D1F3C;
+  --color-navy-light: #122544;
+  --color-navy-backdrop: rgba(10, 22, 40, 0.85);
+
+  /* Colors — Cyan accent */
+  --color-cyan: #1E9FD4;
+  --color-cyan-bright: #2EC4F0;
+  --color-cyan-glow: rgba(30, 159, 212, 0.15);
+  --color-cyan-glow-subtle: rgba(30, 159, 212, 0.08);
+  --color-cyan-tint: rgba(30, 159, 212, 0.06);
+  --color-cyan-border: rgba(30, 159, 212, 0.3);
+  --color-cyan-border-soft: rgba(30, 159, 212, 0.25);
+  --color-cyan-border-muted: rgba(30, 159, 212, 0.2);
+
+  /* Colors — White text */
+  --color-white: #F0F4FF;
+  --color-white-dim: rgba(240, 244, 255, 0.65);
+  --color-white-faint: rgba(240, 244, 255, 0.12);
+
+  /* Colors — Line/border */
+  --color-line: rgba(30, 159, 212, 0.2);
+
+  /* Colors — State */
+  --color-state-green: #22C55E;
+  --color-state-amber: #F59E0B;
+  --color-state-red: #EF4444;
+  --color-state-purple: #A855F7;
+
+  /* Typography — Font families */
+  --font-serif: var(--font-dm-serif-display), serif;
+  --font-sans: var(--font-dm-sans), sans-serif;
+  --font-mono: var(--font-space-mono), monospace;
+
+  /* Typography — Font sizes */
+  --text-h1: clamp(2.8rem, 5vw, 4.4rem);
+  --text-h2: clamp(2rem, 3.5vw, 3rem);
+  --text-h3: 1.3rem;
+  --text-body: 1rem;
+  --text-body-lg: 1.15rem;
+  --text-body-sm: 0.9rem;
+  --text-body-xs: 0.875rem;
+  --text-label-section: 0.68rem;
+  --text-label-sm: 0.65rem;
+
+  /* Spacing extras */
+  --spacing-18: 4.5rem;
+  --spacing-28: 7rem;
+  --spacing-32: 8rem;
+
+  /* Easing */
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ===== Custom Properties (non-Tailwind) ===== */
+:root {
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ===== Accessibility ===== */
+
+/* Focus visible global */
+:focus-visible {
+  outline: 2px solid var(--color-cyan);
+  outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===== Base ===== */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-navy);
+  color: var(--color-white);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
