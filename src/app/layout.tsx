@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { DM_Serif_Display, DM_Sans, Space_Mono } from "next/font/google";
+import Nav from "@/components/organisms/Nav";
+import Footer from "@/components/organisms/Footer";
+import NoiseOverlay from "@/components/atoms/NoiseOverlay";
 import "./globals.css";
 
 const dmSerifDisplay = DM_Serif_Display({
@@ -38,7 +41,12 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${dmSerifDisplay.variable} ${dmSans.variable} ${spaceMono.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <NoiseOverlay />
+        <Nav />
+        <main className="pt-[80px]">{children}</main>
+        <Footer />
+      </body>
     </html>
   );
 }
