@@ -1,26 +1,512 @@
 @import "tailwindcss";
 
+/* ============================================================
+   VI3 DESIGN SYSTEM v2.0
+   Referências: adniaconseils.ca + tiwis.fr/en
+   ============================================================ */
+
+/* ── TOKENS PRIMITIVOS ── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* CORES — Brand */
+  --navy-600:      #122544;
+  --navy-700:      #0D1F3C;
+  --navy-800:      #0A1628;
+  --navy-900:      #060E1A;
+  --cyan-300:      #2EC4F0;
+  --cyan-500:      #1E9FD4;
+  --cyan-600:      #168AB8;
+
+  /* CORES — Aliases (backward compat) */
+  --navy:          var(--navy-800);
+  --navy-mid:      var(--navy-700);
+  --navy-light:    var(--navy-600);
+  --cyan:          var(--cyan-500);
+  --cyan-bright:   var(--cyan-300);
+  --white:         #F0F4FF;
+  --white-dim:     rgba(240,244,255,0.65);
+  --white-muted:   rgba(240,244,255,0.40);
+
+  /* CORES — Semânticas */
+  --bg-primary:    var(--navy-800);
+  --bg-secondary:  var(--navy-700);
+  --bg-tertiary:   var(--navy-600);
+  --bg-inverse:    #FFFFFF;
+  --bg-overlay:    rgba(10,22,40,0.85);
+
+  /* CORES — Superfícies (glassmorphism) */
+  --surface-1:     rgba(255,255,255,0.03);
+  --surface-2:     rgba(255,255,255,0.06);
+  --surface-hover: rgba(255,255,255,0.07);
+  --surface-glass: rgba(255,255,255,0.08);
+
+  /* CORES — Bordas */
+  --line:          rgba(30,159,212,0.20);
+  --line-subtle:   rgba(30,159,212,0.10);
+  --line-strong:   rgba(30,159,212,0.40);
+  --line-light:    rgba(255,255,255,0.08);
+
+  /* CORES — Glow */
+  --glow-cyan-sm:  rgba(30,159,212,0.15);
+  --glow-cyan-md:  rgba(30,159,212,0.30);
+  --glow-cyan-lg:  rgba(30,159,212,0.50);
+
+  /* CORES — Estado */
+  --green:         #22C55E;
+  --amber:         #F59E0B;
+  --red:           #EF4444;
+  --purple:        #A855F7;
+
+  /* TIPOGRAFIA — Famílias */
+  --font-serif:    var(--font-dm-serif, 'DM Serif Display', Georgia, serif);
+  --font-sans:     var(--font-dm-sans,  'DM Sans', system-ui, sans-serif);
+  --font-mono:     var(--font-space-mono, 'Space Mono', monospace);
+
+  /* TIPOGRAFIA — Tamanhos */
+  --text-xs:       0.68rem;
+  --text-sm:       0.875rem;
+  --text-base:     1rem;
+  --text-lg:       1.125rem;
+  --text-xl:       1.25rem;
+  --text-2xl:      1.5rem;
+  --text-h3:       1.3rem;
+  --text-h2:       clamp(2rem, 3.5vw, 3rem);
+  --text-h1:       clamp(2.8rem, 5vw, 4.4rem);
+  --text-hero:     clamp(3.5rem, 7vw, 6rem);
+
+  /* TIPOGRAFIA — Line-heights */
+  --lh-tight:      1.08;
+  --lh-snug:       1.15;
+  --lh-compact:    1.3;
+  --lh-base:       1.5;
+  --lh-relaxed:    1.6;
+
+  /* TIPOGRAFIA — Letter-spacing */
+  --ls-tight:      -0.02em;
+  --ls-normal:     0em;
+  --ls-wide:       0.06em;
+  --ls-widest:     0.14em;
+
+  /* ESPAÇAMENTO */
+  --space-1:       0.25rem;
+  --space-2:       0.5rem;
+  --space-3:       0.75rem;
+  --space-4:       1rem;
+  --space-5:       1.25rem;
+  --space-6:       1.5rem;
+  --space-8:       2rem;
+  --space-10:      2.5rem;
+  --space-12:      3rem;
+  --space-16:      4rem;
+  --space-20:      5rem;
+  --space-24:      6rem;
+  --space-32:      8rem;
+
+  /* BORDER-RADIUS */
+  --radius-sm:     0.25rem;
+  --radius-md:     0.5rem;
+  --radius-lg:     0.75rem;
+  --radius-xl:     1rem;
+  --radius-2xl:    1.5rem;
+  --radius-full:   9999px;
+
+  /* SOMBRAS */
+  --shadow-sm:     0 2px 4px rgba(0,0,0,0.3);
+  --shadow-md:     6px 6px 9px rgba(0,0,0,0.2);
+  --shadow-lg:     12px 12px 50px rgba(0,0,0,0.4);
+  --shadow-sharp:  6px 6px 0px rgba(0,0,0,0.2);
+  --shadow-glow-sm: 0 0 16px rgba(30,159,212,0.20);
+  --shadow-glow-md: 0 0 32px rgba(30,159,212,0.30);
+  --shadow-glow-lg: 0 0 60px rgba(30,159,212,0.40);
+  --shadow-card:   0 8px 32px rgba(10,22,40,0.6), 0 0 0 1px rgba(30,159,212,0.15);
+
+  /* BLUR */
+  --blur-md:       8px;
+  --blur-lg:       16px;
+  --blur-2xl:      30px;
+
+  /* TRANSIÇÕES — Duração */
+  --dur-fast:      150ms;
+  --dur-base:      250ms;
+  --dur-moderate:  350ms;
+  --dur-slow:      500ms;
+  --dur-slower:    600ms;
+  --dur-dramatic:  1200ms;
+
+  /* TRANSIÇÕES — Easing */
+  --ease-smooth:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-dramatic: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* COMPONENTES */
+  --nav-height:    72px;
+  --nav-height-sm: 60px;
+  --section-max:   1200px;
+  --grid-size:     60px;
 }
 
+/* ── TAILWIND THEME BRIDGE ── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-serif:        var(--font-dm-serif);
+  --font-sans:         var(--font-dm-sans);
+  --font-mono:         var(--font-space-mono);
+  --color-navy:        #0A1628;
+  --color-navy-mid:    #0D1F3C;
+  --color-navy-light:  #122544;
+  --color-cyan:        #1E9FD4;
+  --color-cyan-bright: #2EC4F0;
+  --color-white-vi3:   #F0F4FF;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── RESET ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── BASE ── */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--navy);
+  color: var(--white);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  line-height: var(--lh-relaxed);
+  overflow-x: hidden;
+}
+
+/* Noise texture (sutil, mix-blend-mode overlay) */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ── TIPOGRAFIA ── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: var(--ls-tight);
+  color: var(--white);
+}
+
+h1 { font-size: var(--text-h1); line-height: var(--lh-tight); }
+h2 { font-size: var(--text-h2); line-height: var(--lh-snug); }
+h3 { font-size: var(--text-h3); line-height: var(--lh-compact); }
+h4 { font-size: var(--text-2xl); line-height: var(--lh-compact); }
+
+p {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  line-height: var(--lh-relaxed);
+  color: var(--white-dim);
+}
+
+a {
+  color: var(--cyan);
+  text-decoration: none;
+  transition: color var(--dur-base) var(--ease-standard);
+}
+a:hover { color: var(--cyan-bright); }
+
+/* ── ANIMAÇÕES ── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes draw-line {
+  from { stroke-dashoffset: 300; }
+  to   { stroke-dashoffset: 0; }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.4); opacity: 0.6; }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 0.6; }
+}
+
+/* ── CLASSES UTILITÁRIAS GLOBAIS ── */
+
+/* Hero grid background — referência VI3 original */
+.hero-grid {
+  background-image:
+    linear-gradient(var(--glow-cyan-sm) 1px, transparent 1px),
+    linear-gradient(90deg, var(--glow-cyan-sm) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+}
+
+/* Nav glassmorphism — referência TIWIS (blur 30px) + VI3 (blur 16px) */
+.nav-glass {
+  background: var(--bg-overlay);
+  backdrop-filter: blur(var(--blur-lg)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(180%);
+  border-bottom: 1px solid var(--line);
+}
+
+/* Nav blur forte — TIWIS style */
+.nav-blur-strong {
+  backdrop-filter: blur(var(--blur-2xl));
+  -webkit-backdrop-filter: blur(var(--blur-2xl));
+}
+
+/* Card glassmorphism com gradient border — VI3 original */
+.card-gb {
+  position: relative;
+  background: var(--surface-1);
+  border-radius: var(--radius-xl);
+  transition:
+    background var(--dur-moderate) var(--ease-standard),
+    transform var(--dur-moderate) var(--ease-standard),
+    box-shadow var(--dur-moderate) var(--ease-standard);
+}
+.card-gb::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg,
+    rgba(30,159,212,0.3) 0%,
+    rgba(255,255,255,0.04) 50%,
+    rgba(30,159,212,0.1) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  transition: opacity var(--dur-moderate) var(--ease-standard);
+}
+.card-gb:hover {
+  background: var(--surface-hover);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card);
+}
+.card-gb:hover::before {
+  background: linear-gradient(135deg,
+    rgba(30,159,212,0.6) 0%,
+    rgba(255,255,255,0.06) 50%,
+    rgba(30,159,212,0.3) 100%
+  );
+}
+
+/* Overline — Space Mono uppercase */
+.overline {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--cyan);
+  font-weight: 400;
+}
+
+/* SVG Stroke draw animation */
+.stroke-draw {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: draw-line var(--dur-dramatic) var(--ease-smooth) forwards;
+  animation-delay: 0.8s;
+}
+
+/* Botão primário — pill (referência ADNia border-radius: 9999px) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  font-family: var(--font-sans);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: 1;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  transition:
+    background var(--dur-base) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-standard),
+    box-shadow var(--dur-base) var(--ease-standard);
+  text-decoration: none;
+}
+.btn:active { transform: scale(0.98); }
+
+.btn-primary {
+  background: var(--cyan);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--cyan-bright);
+  box-shadow: var(--shadow-glow-md);
+  color: #fff;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--cyan);
+  border: 1px solid var(--line-strong);
+}
+.btn-secondary:hover {
+  background: var(--surface-1);
+  border-color: var(--cyan);
+  color: var(--cyan-bright);
+}
+
+.btn-ghost {
+  background: var(--surface-1);
+  color: var(--white);
+  border: 1px solid var(--line);
+}
+.btn-ghost:hover {
+  background: var(--surface-hover);
+  border-color: var(--line-strong);
+}
+
+/* Botão com seta animada — referência TIWIS .button-small */
+.btn-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: transparent;
+  color: var(--white);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  text-decoration: none;
+}
+.btn-arrow .arrow-icon {
+  transition: transform var(--dur-moderate) var(--ease-dramatic);
+}
+.btn-arrow:hover .arrow-icon {
+  transform: translate(4px, -4px);
+}
+.btn-arrow .btn-text {
+  position: relative;
+  overflow: hidden;
+}
+.btn-arrow .btn-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  transition: transform var(--dur-moderate) var(--ease-dramatic);
+}
+.btn-arrow:hover .btn-text::after {
+  transform: translateY(-100%);
+}
+
+/* Seção — padding e max-width padrões */
+.section {
+  padding-top: var(--space-20);
+  padding-bottom: var(--space-20);
+}
+.section-lg {
+  padding-top: var(--space-32);
+  padding-bottom: var(--space-32);
+}
+.container {
+  width: 100%;
+  max-width: var(--section-max);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+/* Seção dark/light alternadas — referência TIWIS */
+.section-dark {
+  background-color: var(--navy);
+  color: var(--white);
+}
+.section-light {
+  background-color: var(--bg-inverse);
+  color: var(--navy);
+}
+.section-light h1,
+.section-light h2,
+.section-light h3,
+.section-light h4 {
+  color: var(--navy);
+}
+.section-light p {
+  color: rgba(10,22,40,0.75);
+}
+
+/* Glow orb background — hero radial gradient */
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+.glow-orb-cyan {
+  background: radial-gradient(circle, var(--glow-cyan-md) 0%, transparent 70%);
+}
+
+/* Marquee / ticker — referência TIWIS */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 12s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* Focus visible — acessibilidade */
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--navy);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--cyan);
+}
+
+/* Seleção de texto */
+::selection {
+  background: var(--glow-cyan-md);
+  color: var(--white);
 }
